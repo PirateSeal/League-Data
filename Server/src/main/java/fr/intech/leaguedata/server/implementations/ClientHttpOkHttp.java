@@ -18,7 +18,7 @@ public class ClientHttpOkHttp implements ClientHttp {
 
 
     @Override
-    public String get(String url) throws IOException {
+    public String get(String url) {
         Request request = new Request.Builder()
                 .url(url).header("X-Riot-Token","RGAPI-d2a75347-bed5-474f-b2d1-074c0b0121f0")
                 .build();

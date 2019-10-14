@@ -2,6 +2,7 @@ package fr.intech.leaguedata.server.implementations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.intech.leaguedata.server.interfaces.UserService;
+import fr.intech.leaguedata.server.model.RankedQueue;
 import fr.intech.leaguedata.server.model.User;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByName(String name) throws IOException {
+    public User getUserByName(String name) {
 
-        String url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + URLEncoder
-                .encode(name, "UTF-8").replace("+","%20");
+        try {
+            String url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + URLEncoder
+                    .encode(name, "UTF-8").replace("+", "%20");
+            String s = client.get(url);
+            User user = objectMapper.readValue(s, User.class);
+            return user;
 
-        String s = client.get(url);
-        User user = objectMapper.readValue(s, User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        return user;
+        return null;
+
+    }
+
+    @Override
+    public RankedQueue getUserQueueInfo(String name, String queue) {
+        try {
+            User user = getUserByName(name);
+            String url = "https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + user.getId();
+
+            String s = client.get(url);
+            RankedQueue[] queues = objectMapper.readValue(s, RankedQueue[].class);
+
+            switch (queue) {
+                case "tft":
+                    return queues[0];
+                case "solo":
+                    return queues[1];
+                case "flex":
+                    return queues[2];
+                default:
+                    return null;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public RankedQueue[] getUserQueuesInfo(String name) {
+        try {
+            User user = getUserByName(name);
+            String url = "https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + user.getId();
+
+            String s = client.get(url);
+            RankedQueue[] queues = objectMapper.readValue(s, RankedQueue[].class);
+
+            return queues;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
