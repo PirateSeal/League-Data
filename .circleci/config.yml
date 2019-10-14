@@ -41,14 +41,28 @@ jobs:
 
       - store_artifacts:
           path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
+
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: Server
+          # Must be relative path from root
+          paths:
+            - build/libs
   dockerise:
     docker:
       - image: docker:17.05.0-ce-git
     steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: Server/build/libs
       - checkout
       - setup_remote_docker
       # start proprietary DB using private Docker image
       # with credentials stored in the UI
+      - run: ls
+      - run: ls Server
+      - run: ls Server/build
       - run: ls Server/build/libs
 
       # build the application image
