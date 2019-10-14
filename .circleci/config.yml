@@ -56,7 +56,7 @@ jobs:
       - checkout
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: Server/build/libs
+          at: Server
       - setup_remote_docker
       # start proprietary DB using private Docker image
       # with credentials stored in the UI
@@ -66,10 +66,12 @@ jobs:
       - run: ls Server/build/libs
 
       # build the application image
-      - run: docker build -t company/app:$CIRCLE_BRANCH .
+      - run: cd Server && docker build -t pirateseal/league-data:$CIRCLE_BRANCH .
+
+      - run: docker login -p $TOKEN_DOCKERHUB -u $USERNAME_DOCKERHUB
 
       # deploy the image
-      - run: docker push company/app:$CIRCLE_BRANCH
+      - run: docker push pirateseal/league-data:$CIRCLE_BRANCH
 
 workflows:
   version: 2
