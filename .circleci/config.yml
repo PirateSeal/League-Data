@@ -63,5 +63,5 @@ workflows:
     jobs:
       - build
       - dockerise:
-        requires:
-          - build
+          requires:
+            - build
