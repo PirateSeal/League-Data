@@ -42,12 +42,14 @@ jobs:
       - store_artifacts:
           path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
   dockerise:
-    machine: true
+    docker:
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout
+      - setup_remote_docker
       # start proprietary DB using private Docker image
       # with credentials stored in the UI
-      - ls Server/build/libs
+      - run: ls Server/build/libs
 
       # build the application image
       - run: docker build -t company/app:$CIRCLE_BRANCH .
