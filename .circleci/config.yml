@@ -56,3 +56,10 @@ jobs:
 
       # deploy the image
       - run: docker push company/app:$CIRCLE_BRANCH
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - dockerise
