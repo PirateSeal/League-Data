@@ -2,6 +2,9 @@ package fr.intech.leaguedata.server.implementations;
 
 import fr.intech.leaguedata.server.interfaces.ClientHttp;
 import okhttp3.*;
+import org.jboss.logging.Property;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,6 +15,9 @@ public class ClientHttpOkHttp implements ClientHttp {
 
     private OkHttpClient client;
 
+    @Value("${lol.api.key}")
+    private String apiKey;
+
     public ClientHttpOkHttp(OkHttpClient client) {
         this.client = client;
     }
@@ -19,8 +25,9 @@ public class ClientHttpOkHttp implements ClientHttp {
 
     @Override
     public String get(String url) {
+        System.out.println("Clé : "+apiKey);
         Request request = new Request.Builder()
-                .url(url).header("X-Riot-Token","RGAPI-d2a75347-bed5-474f-b2d1-074c0b0121f0")
+                .url(url).header("X-Riot-Token", apiKey)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
