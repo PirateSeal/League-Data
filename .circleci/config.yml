@@ -37,4 +37,7 @@ jobs:
           key: v1-dependencies-{{ checksum "Server/build.gradle" }}
 
       # run tests!
-      - run: cd Server && gradle test
+      - run: cd Server && gradle build
+
+      - store_artifacts:
+        path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
