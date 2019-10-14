@@ -62,4 +62,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - dockerise
+      - dockerise:
+        requires:
+          - build
