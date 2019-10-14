@@ -40,4 +40,4 @@ jobs:
       - run: cd Server && gradle build
 
       - store_artifacts:
-        path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
+          path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
