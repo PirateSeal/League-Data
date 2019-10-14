@@ -53,10 +53,10 @@ jobs:
     docker:
       - image: docker:17.05.0-ce-git
     steps:
+      - checkout
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: Server/build/libs
-      - checkout
       - setup_remote_docker
       # start proprietary DB using private Docker image
       # with credentials stored in the UI
