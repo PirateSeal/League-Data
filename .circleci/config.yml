@@ -41,7 +41,7 @@ jobs:
 
       - store_artifacts:
           path: Server/build/libs/server-0.0.1-SNAPSHOT.jar
- build:
+ dockerise:
    machine: true
    steps:
      - checkout
