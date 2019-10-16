@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">League Data</string>
+    <string name="summonerName">Summoner name</string>
+    <string name="summonerLvl">Level</string>
+    <string name="rank">Rank Queue</string>
+    <string name="lpCount">Lp Count</string>
+    <string name="queue">rankedQueue</string>
 </resources>
