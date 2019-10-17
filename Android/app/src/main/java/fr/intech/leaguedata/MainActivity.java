@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class MainActivity extends Activity {
     TextView summonerName;
     TextView summonerLvl;
     ObjectMapper mapper = new ObjectMapper();
-    Button refresh;
+    CircularImageView refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class MainActivity extends Activity {
 
         summonerName = findViewById(R.id.summonerName);
         summonerLvl = findViewById(R.id.summonerLvl);
-        refresh = findViewById(R.id.refresh);
+        refresh = findViewById(R.id.summonerIcon);
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +55,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() {
                     summonerName.setText(user.getName());
-                    summonerLvl.setText(user.getSummonerLevel());
+                    summonerLvl.setText("" + user.getSummonerLevel());
                 }
             });
         } catch (IOException e) {
