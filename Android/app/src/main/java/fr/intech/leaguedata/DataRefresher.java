@@ -7,12 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -21,18 +24,22 @@ public class DataRefresher {
 
     ObjectMapper mapper;
     Context context;
-    HttpClient client;
+    OkHttpClient client;
 
 
     public DataRefresher(ObjectMapper mapper, Context mainActivity) {
         this.mapper = mapper;
-        this.client = new HttpClient();
+        this.client = new OkHttpClient()
+                .newBuilder()
+                .callTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .build();
         this.context = mainActivity;
     }
 
     public void refreshData(String url) {
         Request request = new Request.Builder().url(url).get().build();
-
         client.newCall(request)
                 .enqueue(
                         new Callback() {
@@ -44,11 +51,9 @@ public class DataRefresher {
                             @Override
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws
                                     IOException {
-
                                 String s = response.body().string();
                                 final User user = mapper.readValue(s, User.class);
                                 saveData(user);
-
                             }
                         });
 
@@ -57,7 +62,8 @@ public class DataRefresher {
 
     public void saveData(User user) {
         try {
-            mapper.writeValue(context.openFileOutput("User.json", MODE_PRIVATE), user);
+            FileOutputStream stream = context.openFileOutput("User.json", MODE_PRIVATE);
+            mapper.writeValue(stream, user);
         } catch (IOException e) {
             e.printStackTrace();
         }

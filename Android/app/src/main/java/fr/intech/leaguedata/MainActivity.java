@@ -3,10 +3,13 @@ package fr.intech.leaguedata;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,31 +20,35 @@ public class MainActivity extends Activity {
     TextView summonerName;
     TextView summonerLvl;
     ObjectMapper mapper = new ObjectMapper();
+    Button refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataRefresher dataRefresher = new DataRefresher(mapper, this);
+        final DataRefresher dataRefresher = new DataRefresher(mapper, this);
 
         summonerName = findViewById(R.id.summonerName);
         summonerLvl = findViewById(R.id.summonerLvl);
+        refresh = findViewById(R.id.refresh);
 
-        String url = "https://tcousin.com:8080/user/";
-        try {
-            url += URLEncoder.encode("Le Phoque Pirate", "UTF-8").replace("+", "%20");
-            dataRefresher.refreshData(url);
-            refreshUI();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshUI(dataRefresher);
+            }
+        });
 
     }
 
-    public void refreshUI() {
+    public void refreshUI(DataRefresher refresher) {
         try {
-            final User user = mapper.readValue(openFileInput("User.json"), User.class);
+            String url = "http://tcousin.com:2525/user/";
+            url += URLEncoder.encode("Le Phoque Pirate", "UTF-8").replace("+", "%20");
+            refresher.refreshData(url);
+            FileInputStream fileInputStream = openFileInput("User.json");
+            final User user = mapper.readValue(fileInputStream, User.class);
 
             runOnUiThread(new Runnable() {
                 @Override
