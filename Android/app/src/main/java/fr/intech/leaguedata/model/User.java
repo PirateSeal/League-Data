@@ -1,4 +1,4 @@
-package fr.intech.leaguedata;
+package fr.intech.leaguedata.model;
 
 public class User {
     private String id;

@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
+        android:name=".debug.MyApplication"
         >
         <activity
             android:name=".MainActivity"

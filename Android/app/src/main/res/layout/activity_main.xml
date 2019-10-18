@@ -107,7 +107,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/rankImg"
+            android:id="@+id/rankLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/season2019unranked1"
