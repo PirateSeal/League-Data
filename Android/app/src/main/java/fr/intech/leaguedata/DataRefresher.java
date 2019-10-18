@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,29 +42,31 @@ public class DataRefresher {
     public void refreshData(String url) {
         Request request = new Request.Builder().url(url).get().build();
         client.newCall(request)
-                .enqueue(
-                        new Callback() {
-                            @Override
-                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                Log.e("DataRefresh", "Erreur de chargement", e);
-                            }
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("DataRefresh", "Erreur de chargement", e);
+                    }
 
-                            @Override
-                            public void onResponse(@NotNull Call call, @NotNull Response response) throws
-                                    IOException {
-                                String s = response.body().string();
-                                final User user = mapper.readValue(s, User.class);
-                                saveData(user);
-                            }
-                        });
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws
+                            IOException {
+                        String s = response.body().string();
+                        final User user = mapper.readValue(s, User.class);
+
+                        saveData(user);
+                    }
+                });
 
     }
 
 
     public void saveData(User user) {
         try {
-            FileOutputStream stream = context.openFileOutput("User.json", MODE_PRIVATE);
+            FileOutputStream stream = context.openFileOutput("temp.json", MODE_PRIVATE);
             mapper.writeValue(stream, user);
+            stream.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
