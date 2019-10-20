@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Objects;
 
-import fr.intech.leaguedata.model.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -59,8 +58,5 @@ public class DataGetter {
                         if(dataListener != null) dataListener.onNewData();
                     }
                 });
-
     }
-
-
 }

@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.mikhaellopez:circularimageview:4.0.2'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
-    implementation 'com.synnapps:carouselview:0.1.5'
+    implementation 'com.github.moondroid.coverflow:library:1.0'
 
 
     androidTestImplementation 'androidx.test:runner:1.2.0'

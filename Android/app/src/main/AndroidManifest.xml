@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="fr.intech.leaguedata">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".debug.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:name=".debug.MyApplication"
-        >
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,5 +25,4 @@
         </activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

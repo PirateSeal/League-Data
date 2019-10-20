@@ -21,7 +21,6 @@ import fr.intech.leaguedata.getdata.NewDataListener;
 import fr.intech.leaguedata.model.RankedQueue;
 import fr.intech.leaguedata.model.User;
 
-
 public class MainActivity extends Activity {
 
     AutoCompleteTextView summonerName;
@@ -57,7 +56,6 @@ public class MainActivity extends Activity {
 
         rankLogo.setVisibility(View.GONE);
 
-
         dataGetter.setDataListener(dataListener, serializer);
 
         summonerIcon.setOnClickListener(v -> {
@@ -67,7 +65,6 @@ public class MainActivity extends Activity {
             dataGetter.requestData(urls[0], "user");
             dataGetter.requestData(urls[1], "queues");
         });
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -124,6 +121,5 @@ public class MainActivity extends Activity {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 }
