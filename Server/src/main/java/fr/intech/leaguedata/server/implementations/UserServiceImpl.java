@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             RankedQueue[] queues = objectMapper.readValue(s, RankedQueue[].class);
 
             for (RankedQueue rankedQueue : queues) {
-                if (rankedQueue.getQueueType() == name) return rankedQueue;
+                if (rankedQueue.getQueueType().equals(queue)) return rankedQueue;
             }
 
             return null;
