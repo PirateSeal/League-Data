@@ -3,8 +3,10 @@ package fr.intech.leaguedata;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity {
     TextView rank;
     TextView lpCount;
     ImageView rankLogo;
+    ProgressBar spinner;
 
     ObjectMapper mapper = new ObjectMapper();
     DataSerializer serializer = new DataSerializer(mapper, this);
@@ -50,11 +53,16 @@ public class MainActivity extends Activity {
         rank = findViewById(R.id.rank);
         lpCount = findViewById(R.id.lpCount);
         rankLogo = findViewById(R.id.rankLogo);
+        spinner = findViewById(R.id.spinner);
+
+        rankLogo.setVisibility(View.GONE);
 
 
         dataGetter.setDataListener(dataListener, serializer);
 
         summonerIcon.setOnClickListener(v -> {
+            rankLogo.setVisibility(View.GONE);
+            spinner.setVisibility(View.VISIBLE);
             String[] urls = urlBuilder.buildUrlName(String.valueOf(summonerName.getText()));
             dataGetter.requestData(urls[0], "user");
             dataGetter.requestData(urls[1], "queues");
@@ -78,11 +86,44 @@ public class MainActivity extends Activity {
                 rank.setText(rankedQueue.getTier() + " " + rankedQueue.getRank());
                 lpCount.setText(String.valueOf(rankedQueue.getLeaguePoints()));
 
+                String imgRank = rankedQueue.getTier().toLowerCase();
+
+                switch (imgRank) {
+                    case "bronze":
+                        rankLogo.setImageResource(R.drawable.bronze);
+                        break;
+                    case "silver":
+                        rankLogo.setImageResource(R.drawable.silver);
+                        break;
+                    case "gold":
+                        rankLogo.setImageResource(R.drawable.gold);
+                        break;
+                    case "platinum":
+                        rankLogo.setImageResource(R.drawable.platinum);
+                        break;
+                    case "diamond":
+                        rankLogo.setImageResource(R.drawable.diamond);
+                        break;
+                    case "master":
+                        rankLogo.setImageResource(R.drawable.master);
+                        break;
+                    case "grandmaster":
+                        rankLogo.setImageResource(R.drawable.grandmaster);
+                        break;
+                    case "challenger":
+                        rankLogo.setImageResource(R.drawable.challenger);
+                        break;
+                    default:
+                        rankLogo.setImageResource(R.drawable.unranked);
+                        break;
+                }
+
+                rankLogo.setVisibility(View.VISIBLE);
+
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
 
     }
 }
