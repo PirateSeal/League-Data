@@ -1,5 +1,7 @@
 package fr.intech.leaguedata.model;
 
+import java.util.ArrayList;
+
 public class User {
     private String id;
 
@@ -14,6 +16,8 @@ public class User {
     private long revisionDate;
 
     private int summonerLevel;
+
+    private RankedQueue[] rankedQueues;
 
     public User() {
 
@@ -85,5 +89,13 @@ public class User {
 
     public void setSummonerLevel(int summonerLevel) {
         this.summonerLevel = summonerLevel;
+    }
+
+    public RankedQueue[] getRankedQueues() {
+        return rankedQueues;
+    }
+
+    public void setRankedQueues(RankedQueue[] rankedQueues) {
+        this.rankedQueues = rankedQueues;
     }
 }

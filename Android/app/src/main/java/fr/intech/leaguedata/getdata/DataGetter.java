@@ -17,7 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UserInfoRefresher {
+public class DataGetter {
 
     private ObjectMapper mapper;
     private OkHttpClient client;
@@ -31,7 +31,7 @@ public class UserInfoRefresher {
     private NewDataListener dataListener;
 
 
-    public UserInfoRefresher(ObjectMapper mapper) {
+    public DataGetter(ObjectMapper mapper) {
         this.mapper = mapper;
         this.client = new OkHttpClient()
                 .newBuilder()
@@ -39,7 +39,7 @@ public class UserInfoRefresher {
                 .build();
     }
 
-    public void refreshData(String url) {
+    public void requestData(String url, String typeOfObject) {
         Request request = new Request.Builder().url(url).get().build();
         client.newCall(request)
                 .enqueue(new Callback() {
@@ -51,9 +51,10 @@ public class UserInfoRefresher {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws
                             IOException {
+
                         String s = Objects.requireNonNull(response.body()).string();
 
-                        serializer.saveData(s);
+                        serializer.saveData(s,typeOfObject);
 
                         if(dataListener != null) dataListener.onNewData();
                     }

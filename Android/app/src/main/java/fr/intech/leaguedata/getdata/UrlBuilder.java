@@ -11,7 +11,7 @@ public class UrlBuilder {
             String user = URLEncoder.encode(String.valueOf(userName), "UTF-8").replace("+", "%20");
             String url = "http://tcousin.com:2525/user/";
             String[] urls = new String[]{
-                    url + user, url + user + "/queues"
+                    url + user, url + user + "/queue/solo"
             };
             return urls;
 

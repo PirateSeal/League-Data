@@ -1,7 +1,7 @@
 package fr.intech.leaguedata;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.media.Image;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import fr.intech.leaguedata.getdata.DataSerializer;
 import fr.intech.leaguedata.getdata.UrlBuilder;
-import fr.intech.leaguedata.getdata.UserInfoRefresher;
+import fr.intech.leaguedata.getdata.DataGetter;
 import fr.intech.leaguedata.getdata.NewDataListener;
 import fr.intech.leaguedata.model.RankedQueue;
 import fr.intech.leaguedata.model.User;
@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 
     AutoCompleteTextView summonerName;
     TextView summonerLvl;
-    CircularImageView refreshData;
+    CircularImageView summonerIcon;
     TextView queue;
     TextView rank;
     TextView lpCount;
@@ -41,57 +41,46 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final UserInfoRefresher userInfoRefresher = new UserInfoRefresher(mapper);
+        final DataGetter dataGetter = new DataGetter(mapper);
 
         summonerName = findViewById(R.id.summonerName);
         summonerLvl = findViewById(R.id.summonerLvl);
-        refreshData = findViewById(R.id.summonerIcon);
+        summonerIcon = findViewById(R.id.summonerIcon);
         queue = findViewById(R.id.queue);
         rank = findViewById(R.id.rank);
         lpCount = findViewById(R.id.lpCount);
         rankLogo = findViewById(R.id.rankLogo);
 
 
-        userInfoRefresher.setDataListener(dataListener, serializer);
+        dataGetter.setDataListener(dataListener, serializer);
 
-        String[] urls = urlBuilder.buildUrlName(String.valueOf(summonerName.getText()));
-        refreshData.setOnClickListener(v -> {
-            for (String url : urls) userInfoRefresher.refreshData(url);
+        summonerIcon.setOnClickListener(v -> {
+            String[] urls = urlBuilder.buildUrlName(String.valueOf(summonerName.getText()));
+            dataGetter.requestData(urls[0], "user");
+            dataGetter.requestData(urls[1], "queues");
         });
+
     }
 
+    @SuppressLint("SetTextI18n")
     public void refreshUI() {
-        String data = serializer.getData();
-        User user;
-        RankedQueue[] queues;
-
-
         try {
-            user = mapper.readValue(data, User.class);
+            User user = mapper.readValue(serializer.getData("user"), User.class);
+
+            RankedQueue rankedQueue = mapper.readValue(serializer.getData("queues"), RankedQueue.class);
+
             runOnUiThread(() -> {
                 summonerLvl.setText(String.valueOf(user.getSummonerLevel()));
                 Picasso.get()
                         .load("http://ddragon.leagueoflegends.com/cdn/9.20.1/img/profileicon/" + user.getProfileIconId() + ".png")
-                        .into(refreshData);
+                        .into(summonerIcon);
+                queue.setText(rankedQueue.getQueueType());
+                rank.setText(rankedQueue.getTier() + " " + rankedQueue.getRank());
+                lpCount.setText(String.valueOf(rankedQueue.getLeaguePoints()));
+
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                queues = mapper.readValue(data, RankedQueue[].class);
-
-                RankedQueue solo = queues[2];
-                RankedQueue flex = queues[1];
-                RankedQueue tft = queues[0];
-
-                runOnUiThread(() -> {
-                    queue.setText("Solo / Duo");
-                    rank.setText(solo.getTier() + " " + solo.getRank());
-                    lpCount.setText(String.valueOf(solo.getLeaguePoints()));
-                });
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
         }
 
 

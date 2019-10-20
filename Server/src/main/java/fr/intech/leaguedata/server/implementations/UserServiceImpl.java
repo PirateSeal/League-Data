@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,21 +48,15 @@ public class UserServiceImpl implements UserService {
             String s = client.get(url);
             RankedQueue[] queues = objectMapper.readValue(s, RankedQueue[].class);
 
-            switch (queue) {
-                case "tft":
-                    return queues[0];
-                case "solo":
-                    return queues[1];
-                case "flex":
-                    return queues[2];
-                default:
-                    return null;
+            for (RankedQueue rankedQueue : queues) {
+                if (rankedQueue.getQueueType() == name) return rankedQueue;
             }
 
+            return null;
+
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -76,8 +71,7 @@ public class UserServiceImpl implements UserService {
             return queues;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }
